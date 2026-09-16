@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Food List</title>
+</head>
+
+<body>
+
+    <h1>Food</h1>
+
+    <button onclick="loadFoods()">Load Food</button>
+
+    <br><br>
+
+    <input type="number" id="foodId" placeholder="Enter food ID">
+    <button onclick="searchFood()">Search ID</button>
+
+    <ul id="foodList"></ul>
+
+    <script>
+        async function loadFoods() {
+
+            const response = await fetch("api/foods");
+            const foods = await response.json();
+            const list = document.getElementById("foodList");
+
+            list.innerHTML = "";
+
+            foods.forEach(food => {
+                const item = document.createElement("li");
+
+                item.textContent =
+                    food.id + " - " + food.food + " - ₱" + food.price;
+
+                list.appendChild(item);
+            });
+        }
+
+        async function searchFood() {
+
+            const id = document.getElementById("foodId").value;
+            const list = document.getElementById("foodList");
+
+            const response = await fetch("api/foods/" + id);
+            const food = await response.json();
+
+            list.innerHTML = "";
+
+            const item = document.createElement("li");
+
+            if (response.ok) {
+                item.textContent =
+                    food.id + " - " + food.food + " - ₱" + food.price;
+            } else {
+                item.textContent = food.message;
+            }
+
+            list.appendChild(item);
+        }
+    </script>
+
+</body>
+</html>
